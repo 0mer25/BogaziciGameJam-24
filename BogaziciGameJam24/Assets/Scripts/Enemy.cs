@@ -5,20 +5,27 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float damage;
-    private void CollisionWithWall()
+    [SerializeField] private float movementSpeed;
+    private Rigidbody rb;
+    private void Awake() 
     {
-
+        rb = GetComponent<Rigidbody>();
     }
-    private void OnCollisionEnter(Collision other) {
-        if(other.gameObject.CompareTag("wall"))
+
+    private void Start() 
+    {
+        rb.velocity = transform.forward * movementSpeed;
+    }
+    private void OnTriggerEnter(Collider other) {
+        if(other.TryGetComponent<Player>(out Player player))
         {
-            CollisionWithWall();
-            return;
+            GameManager.Instance.IncreaseSlider(damage , true);
+            Destroy(gameObject);
         }
 
-        if(other.gameObject.TryGetComponent<Player>(out Player player))
+        if(other.TryGetComponent<WallSpawner>(out WallSpawner wall))
         {
-            GameManager.Instance.IncreaseSlider(damage);
+            wall.SpawnEnemy(transform.position.x , transform.position.z);
             Destroy(gameObject);
         }
     }

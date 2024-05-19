@@ -19,7 +19,7 @@ public class Antidepressant : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if(other.TryGetComponent<Player>(out Player player))
         {
-            GameManager.Instance.IncreaseSlider(-heal);
+            GameManager.Instance.IncreaseSlider(-heal , false);
             Destroyyy();
         }
     }
